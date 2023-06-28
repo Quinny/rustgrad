@@ -14,7 +14,7 @@ use std::rc::Rc;
 // let z = value(4.0);
 //
 // let out = x.mul(&y).add(&z);
-// x.compute_gradients();
+// out.compute_gradients();
 //
 // println!(x.gradient()) -> 3.0
 // println!(y.gradient()) -> 2.0
