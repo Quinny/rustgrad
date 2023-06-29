@@ -6,7 +6,7 @@ use neural_net::NeuralNet;
 
 fn main() {
     let net = NeuralNet::new(vec![2, 1]);
-    for i in (0..1000) {
+    for _i in 0..1000 {
         let inputs = vec![
             vec![value(5.0), value(5.0)],
             vec![value(4.0), value(3.0)],
