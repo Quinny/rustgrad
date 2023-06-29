@@ -68,7 +68,7 @@ impl NeuralNet {
         }
     }
 
-    pub fn foward(&self, inputs: Vec<Value>) -> Vec<Value> {
+    pub fn forward(&self, inputs: Vec<Value>) -> Vec<Value> {
         let mut output = inputs;
         for layer in &self.layers {
             output = layer.forward(&output);

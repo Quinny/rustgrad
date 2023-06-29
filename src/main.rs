@@ -23,7 +23,7 @@ fn main() {
         ];
         let square_error = inputs
             .iter()
-            .map(|input| net.foward(input.clone()))
+            .map(|input| net.forward(input.clone()))
             .zip(expected_outputs)
             .map(|(predicted, actual)| {
                 predicted[0].subtract(&actual).squared()
@@ -37,5 +37,5 @@ fn main() {
     }
 
     net.dump();
-    println!("9 + 4 = {}", net.foward(vec![value(9.0), value(4.0)])[0].data());
+    println!("9 + 4 = {}", net.forward(vec![value(9.0), value(4.0)])[0].data());
 }
