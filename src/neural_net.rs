@@ -1,9 +1,9 @@
 // A basic neural network package which leverages the `Value` class
 // as it's base element.
 
-use std::iter::zip;
 use crate::value::{value, Value};
 use rand::{self, Rng};
+use std::iter::zip;
 
 // A single neuron which multiplies each input feature
 // against each weight and adds the bias.
@@ -30,9 +30,17 @@ impl Neuron {
             .unwrap()
             .add(&self.bias)
     }
+
+    fn parameters(&self) -> Vec<Value> {
+        self.weights
+            .clone()
+            .into_iter()
+            .chain([self.bias.clone()])
+            .collect()
+    }
 }
 
-// A layer of neurons. 
+// A layer of neurons.
 struct Layer {
     neurons: Vec<Neuron>,
 }
@@ -48,6 +56,13 @@ impl Layer {
         self.neurons
             .iter()
             .map(|neuron| neuron.forward(inputs))
+            .collect()
+    }
+
+    fn parameters(&self) -> Vec<Value> {
+        self.neurons
+            .iter()
+            .flat_map(|neuron| neuron.parameters())
             .collect()
     }
 }
@@ -76,11 +91,23 @@ impl NeuralNet {
         output
     }
 
+    pub fn parameters(&self) -> Vec<Value> {
+        self.layers
+            .iter()
+            .flat_map(|layer| layer.parameters())
+            .collect()
+    }
+
     pub fn dump(&self) {
         for layer in &self.layers {
             println!("layer");
             for neuron in &layer.neurons {
-                let ws: Vec<f32> = neuron.weights.clone().into_iter().map(|w| w.data()).collect();
+                let ws: Vec<f32> = neuron
+                    .weights
+                    .clone()
+                    .into_iter()
+                    .map(|w| w.data())
+                    .collect();
                 println!("w={:?}, b={}", ws, neuron.bias.data());
             }
         }

@@ -175,13 +175,10 @@ impl Value {
         }
     }
 
-    // Adjust all values in the object graph towards the direction of their gradient
-    // by a factor of `learning_rate`.
+    // Move this value in the direction of the gradient proporitional to the provided
+    // `learning_rate`.
     pub fn learn(&self, learning_rate: f32) {
         self.body.borrow_mut().data -= self.gradient() * learning_rate;
-        for child in &mut self.body.borrow_mut().children {
-            child.learn(learning_rate)
-        }
     }
 
     // Zero out all gradients in the operation graph.
