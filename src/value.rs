@@ -100,6 +100,15 @@ impl Value {
         })
     }
 
+    pub fn relu(&self) -> Value {
+        Value::new(ValueBody {
+            data: self.data().max(0.0),
+            children: vec![self.clone()],
+            gradient: 0.0,
+            operation: Some(Operation::Relu),
+        })
+    }
+
     // Compute the gradients of all values in the operation graph
     // that contributed to this value.
     pub fn compute_gradients(&mut self) -> () {
@@ -149,6 +158,16 @@ impl Value {
                     exponent.data() * (base.data().powf(exponent.data() - 1.0)) * self.gradient();
             }
 
+            // The Relu function derivative is: 1 if x > 0 else 0
+            Some(Operation::Relu) => {
+                let base = &self.body.borrow().children[0];
+                base.body.borrow_mut().gradient += if base.data() > 0.0 {
+                    1.0 * self.gradient()
+                } else {
+                    0.0
+                };
+            }
+
             None => (),
         }
         for child in &mut self.body.borrow_mut().children {
@@ -186,6 +205,7 @@ enum Operation {
     Addition,
     Multiplication,
     Power,
+    Relu,
 }
 
 struct ValueBody {
